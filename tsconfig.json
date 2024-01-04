@@ -1,4 +1,13 @@
 /* To learn more about this file see: https://angular.io/config/tsconfig. */
+
+// "compilerOptions": {
+//   //...rest parameters
+
+//   "baseUrl": "./",
+//   "paths": {
+//     "tslib" : ["path/to/node_modules/tslib/tslib.d.ts"]
+//   },
+
 {
   "compileOnSave": false,
   "compilerOptions": {
@@ -22,7 +31,11 @@
     "lib": [
       "ES2022",
       "dom"
-    ]
+    ],
+    "baseUrl": "./",
+    "paths": {
+      "tslib" : ["path/to/node_modules/tslib/tslib.d.ts"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
