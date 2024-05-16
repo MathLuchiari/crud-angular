@@ -1,0 +1,23 @@
+.content-form-course {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
+}
+
+.mat-mdc-card {
+  flex: 0 0 85%;
+}
+
+.mat-mdc-card-actions {
+  justify-content: center;
+  gap: 1rem;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.min-width {
+  width: 100%;
+  min-width: 150px;
+}
