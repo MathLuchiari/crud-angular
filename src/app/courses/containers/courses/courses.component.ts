@@ -3,8 +3,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { catchError, Observable, of } from 'rxjs';
 import { ErrorDialogComponent } from 'src/app/shared/components/error-dialog/error-dialog.component';
 
-import { Course } from '../model/course';
-import { CoursesService } from '../services/courses.service';
+import { Course } from '../../model/course';
+import { CoursesService } from '../../services/courses.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -49,6 +49,4 @@ export class CoursesComponent {
   onAdd(): void {
     this.router.navigate(['new'], {relativeTo: this.route})
   }
-
-
 }
