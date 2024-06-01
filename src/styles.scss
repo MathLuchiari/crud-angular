@@ -2,12 +2,12 @@
 @use '@angular/material' as mat;
 @include mat.core();
 
-$custom-app-primary: mat.define-palette(mat.$blue-palette);
-$custom-app-secondary: mat.define-palette(mat.$blue-palette, 800);
-$custom-app-accent: mat.define-palette(mat.$blue-palette, A400, A200, A100);
-$custom-app-warning: mat.define-palette(mat.$red-palette, 800);
+$custom-app-primary: mat.m2-define-palette(mat.$m2-blue-palette);
+$custom-app-secondary: mat.m2-define-palette(mat.$m2-blue-palette, 800);
+$custom-app-accent: mat.m2-define-palette(mat.$m2-blue-palette, A400, A200, A100);
+$custom-app-warning: mat.m2-define-palette(mat.$m2-red-palette, 800);
 
-$my-theme: mat.define-light-theme((
+$my-theme: mat.m2-define-light-theme((
  color: (
    primary  : $custom-app-primary,
    secondary: $custom-app-secondary,

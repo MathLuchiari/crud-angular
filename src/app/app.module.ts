@@ -17,7 +17,7 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
     MatToolbarModule
   ],
   providers: [
-    provideHttpClient(withInterceptorsFromDi)
+    provideHttpClient(withInterceptorsFromDi())
   ],
   bootstrap: [AppComponent]
 })
