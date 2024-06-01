@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, Observable, of } from 'rxjs';
 import { ErrorDialogComponent } from 'src/app/shared/components/error-dialog/error-dialog.component';
 
 import { Course } from '../../model/course';
 import { CoursesService } from '../../services/courses.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-courses',
@@ -14,7 +16,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class CoursesComponent {
 
-  courses$: Observable<Course[]>;
+  courses$: Observable<Course[]> | null = null;
 
   // coursesService: CoursesService;
 
@@ -22,11 +24,20 @@ export class CoursesComponent {
     private coursesService: CoursesService,
     private dialog: MatDialog,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private _snackBar: MatSnackBar
 
     ) {
     // this.courses = new CoursesService();
-    this.courses$ = coursesService.list()
+    this.refresh()
+  }
+
+  ngOnInit(): void {
+
+  }
+
+  refresh() {
+    this.courses$ = this.coursesService.list()
     .pipe(
       catchError( error => {
         // console.log(error);
@@ -34,10 +45,6 @@ export class CoursesComponent {
         return of([]);
       })
     );
-  }
-
-  ngOnInit(): void {
-
   }
 
   onError( errorMsg: string ) {
@@ -53,5 +60,33 @@ export class CoursesComponent {
   onEdit( course: Course ) {
     this.router.navigate(['edit', course._id], {relativeTo: this.route})
     // this.router.navigate([`edit`], {relativeTo: this.route})
+  }
+
+  onDelete(course: Course): void {
+
+    const dialogRef = this.dialog.open( ConfirmationDialogComponent, {
+      data: "Tem certeza que deseja deletar este curso?"
+    })
+
+    dialogRef.afterClosed().subscribe({
+      next: (result: boolean) => {
+        if( result ) {
+          this.coursesService.remove( course._id ).subscribe({
+            next: () => {
+              this._snackBar.open("Curso removido com sucesso!", 'X', {
+                duration: 5000,
+                verticalPosition: 'top',
+                horizontalPosition: 'center'
+              });
+
+              this.refresh()
+            },
+            error: () => {
+              this.onError('Erro ao deletar curso!');
+            }
+          })
+        }
+      }
+    })
   }
 }
