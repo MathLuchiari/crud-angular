@@ -40,7 +40,7 @@ export class CourseFormComponent {
                   ]
                 ],
         category: [course.category, [Validators.required]],
-        lessons: this.formBuilder.array( this.retrieveLessons(course) )
+        lessons: this.formBuilder.array( this.retrieveLessons(course), Validators.required )
       });
 
       console.log(this.form);
@@ -61,8 +61,16 @@ export class CourseFormComponent {
   private createLesson(lesson: Lesson = {id: '', name: '', youtubeUrl: ''}) {
     return this.formBuilder.group({
       id: [lesson.id],
-      name: [lesson.name],
-      youtubeUrl: [lesson.youtubeUrl]
+      name: [lesson.name, [
+        Validators.required,
+        Validators.minLength(5),
+        Validators.maxLength(100)
+      ]],
+      youtubeUrl: [lesson.youtubeUrl, [
+        Validators.required,
+        Validators.minLength(5),
+        Validators.maxLength(100)
+      ]]
     })
   }
 
@@ -70,15 +78,29 @@ export class CourseFormComponent {
     return (<UntypedFormArray>this.form.get('lessons')).controls;
   }
 
+  addNewLesson() {
+    const lessons = this.form.get('lessons') as UntypedFormArray;
+    lessons.push(this.createLesson());
+  }
+
+  removeLesson( index: number ) {
+    const lessons = this.form.get('lessons') as UntypedFormArray;
+    lessons.removeAt(index);
+  }
+
   onSubmit() {
-    this.service.save( this.form.value ).subscribe({
-      complete: () => {
-        this.onSuccess();
-      },
-      error: error => {
-        this.onError();
-      }
-    });
+    if (this.form.valid) {
+      this.service.save( this.form.value ).subscribe({
+        complete: () => {
+          this.onSuccess();
+        },
+        error: error => {
+          this.onError();
+        }
+      });
+    } else {
+      alert('Formulário inválido');
+    }
   }
 
   onCancel() {
@@ -112,6 +134,11 @@ export class CourseFormComponent {
     }
 
     return 'Campo inválido!'
+  }
+
+  isFormArrayRequired(): boolean {
+    const lessons = this.form.get('lessons') as UntypedFormArray;
+    return !lessons.valid && lessons.hasError('required') && lessons.touched;
   }
 
 }
