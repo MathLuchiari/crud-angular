@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Course } from '../../model/course';
 import { CoursesService } from '../../services/courses.service';
 import { Lesson } from '../../model/lesson';
+import { FormUtilsService } from 'src/app/shared/form/form-utils.service';
 
 @Component({
   selector: 'app-course-form',
@@ -23,7 +24,7 @@ export class CourseFormComponent {
     private _snackBar: MatSnackBar,
     private location: Location,
     private route: ActivatedRoute,
-
+    public formUtils: FormUtilsService
   ) {
     //this.form
   }
@@ -99,7 +100,7 @@ export class CourseFormComponent {
         }
       });
     } else {
-      alert('Formulário inválido');
+      this.formUtils.validadeAllFormFields(this.form);
     }
   }
 
@@ -108,37 +109,11 @@ export class CourseFormComponent {
   }
 
   onSuccess() {
-    this._snackBar.open("Curso salvo com sucesso!", '', { duration: 5000});
+    this.formUtils.msgSnackBar("Curso salvo com sucesso!");
     this.onCancel();
   }
 
   onError() {
-    this._snackBar.open("Erro ao salvar curso!", '', { duration: 5000});
+    this.formUtils.msgSnackBar("Erro ao salvar curso!");
   }
-
-  getErrorMessage(fieldName: string): string {
-    const field = this.form.get(fieldName);
-
-    if( field?.hasError('required') ) {
-      return 'Campo obrigatório!';
-    }
-
-    if( field?.hasError('minlength') ) {
-      const requiredMinLength: number = field.errors ? field.errors['minlength']['requiredLength'] : 5;
-      return `Tamanho mínimo precisa ser de ${requiredMinLength} caracteres!`;
-    }
-
-    if( field?.hasError('maxlength') ) {
-      const requiredMaxLength: number = field.errors ? field.errors['maxlength']['requiredLength'] : 200;
-      return `Tamanho máximo excedido de ${requiredMaxLength} caracteres!`;
-    }
-
-    return 'Campo inválido!'
-  }
-
-  isFormArrayRequired(): boolean {
-    const lessons = this.form.get('lessons') as UntypedFormArray;
-    return !lessons.valid && lessons.hasError('required') && lessons.touched;
-  }
-
 }
