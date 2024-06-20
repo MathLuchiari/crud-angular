@@ -14,8 +14,8 @@ export class CoursesService {
 
   constructor(private httpClient: HttpClient) { }
 
-  list() {
-    return this.httpClient.get<CoursePage>(this.API)
+  list(pageNumber = 0, pageSize = 10) {
+    return this.httpClient.get<CoursePage>(this.API, {params: {pageNumber, pageSize}})
     .pipe(
       first()
     );
